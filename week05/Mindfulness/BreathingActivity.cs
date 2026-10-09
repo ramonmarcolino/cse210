@@ -1,38 +1,35 @@
 using System;
-using System.Threading;
 
-public class BreathingActivity : Activity
+namespace Mindfulness
 {
-    public BreathingActivity()
-        : base(
-            "Breathing Activity",
-            "This activity will help you relax by walking you " +
-            "through breathing in and out slowly. Clear your mind " +
-            "and focus on your breathing."
-        )
+    public class BreathingActivity : Activity
     {
-    }
-
-    public void Run()
-    {
-        DisplayStartingMessage();
-
-        DateTime endTime = DateTime.Now.AddSeconds(GetDuration());
-
-        while (DateTime.Now < endTime)
+        public BreathingActivity()
+            : base(
+                "Breathing Activity",
+                "This activity will help you relax by guiding you through slow breathing. Clear your mind and focus on your breathing.")
         {
-            Console.WriteLine();
-            Console.Write("Breathe in...");
-            ShowCountDown(4);
-
-            if (DateTime.Now >= endTime)
-                break;
-
-            Console.WriteLine();
-            Console.Write("Breathe out...");
-            ShowCountDown(4);
         }
 
-        DisplayEndingMessage();
+        protected override void PerformActivity()
+        {
+            DateTime endTime = DateTime.UtcNow.AddSeconds(Duration);
+
+            while (DateTime.UtcNow < endTime)
+            {
+                Console.Write("Breathe in...");
+                ShowCountDown(4);
+                Console.WriteLine();
+
+                if (DateTime.UtcNow >= endTime)
+                {
+                    break;
+                }
+
+                Console.Write("Breathe out...");
+                ShowCountDown(4);
+                Console.WriteLine();
+            }
+        }
     }
 }

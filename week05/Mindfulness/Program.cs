@@ -1,103 +1,64 @@
+// Enhancements and additional features
+// Added random motivational messages on Program.cs
 using System;
-using System.Collections.Generic;
 
-class Program
+namespace Mindfulness
 {
-    static void Main(string[] args)
+    internal class Program
     {
-        // Creativity requirement:
-        // This program records the completed activities in memory
-        // and displays a session summary before exiting.
-
-        List<string> completedActivities = new List<string>();
-
-        bool running = true;
-
-        while (running)
+        static void Main(string[] args)
         {
-            Console.Clear();
+            bool running = true;
 
-            Console.WriteLine("Mindfulness Program");
-            Console.WriteLine();
-            Console.WriteLine("1. Start breathing activity");
-            Console.WriteLine("2. Start reflection activity");
-            Console.WriteLine("3. Start listing activity");
-            Console.WriteLine("4. View session summary");
-            Console.WriteLine("5. Quit");
-            Console.Write("Select a choice from the menu: ");
-
-            string choice = Console.ReadLine() ?? "";
-
-            switch (choice)
+            while (running)
             {
-                case "1":
-                    BreathingActivity breathing =
-                        new BreathingActivity();
+                Console.Clear();
+                Console.WriteLine("Welcome to the Mindfulness Program!");
+                Console.WriteLine();
+                Console.WriteLine("Menu Options:");
+                Console.WriteLine("  1. Start breathing activity");
+                Console.WriteLine("  2. Start reflection activity");
+                Console.WriteLine("  3. Start listing activity");
+                Console.WriteLine("  4. Quit");
+                Console.Write("Select a choice from the menu: ");
 
-                    breathing.Run();
+                string choice = Console.ReadLine() ?? "";
 
-                    completedActivities.Add(
-                        $"Breathing Activity - {breathing.GetDuration()} seconds"
-                    );
-                    break;
+                Activity activity = null;
 
-                case "2":
-                    ReflectionActivity reflection =
-                        new ReflectionActivity();
+                switch (choice)
+                {
+                    case "1":
+                        activity = new BreathingActivity();
+                        break;
 
-                    reflection.Run();
+                    case "2":
+                        activity = new ReflectionActivity();
+                        break;
 
-                    completedActivities.Add(
-                        $"Reflection Activity - {reflection.GetDuration()} seconds"
-                    );
-                    break;
+                    case "3":
+                        activity = new ListingActivity();
+                        break;
 
-                case "3":
-                    ListingActivity listing =
-                        new ListingActivity();
+                    case "4":
+                        running = false;
+                        Console.WriteLine("Thank you for using the Mindfulness Program. Goodbye!");
+                        break;
 
-                    listing.Run();
+                    default:
+                        Console.WriteLine("Invalid choice. Please select 1, 2, 3, or 4.");
+                        Thread.Sleep(1500);
+                        break;
+                }
 
-                    completedActivities.Add(
-                        $"Listing Activity - {listing.GetDuration()} seconds"
-                    );
-                    break;
-
-                case "4":
-                    Console.Clear();
-                    Console.WriteLine("Session Summary");
-                    Console.WriteLine();
-
-                    if (completedActivities.Count == 0)
-                    {
-                        Console.WriteLine(
-                            "No activities completed yet."
-                        );
-                    }
-                    else
-                    {
-                        foreach (string activity in completedActivities)
-                        {
-                            Console.WriteLine($"- {activity}");
-                        }
-                    }
-
+                if (activity != null)
+                {
+                    activity.Run();
                     Console.WriteLine();
                     Console.WriteLine("Press Enter to return to the menu.");
                     Console.ReadLine();
-                    break;
-
-                case "5":
-                    running = false;
-                    break;
-
-                default:
-                    Console.WriteLine("Invalid choice. Try again.");
-                    System.Threading.Thread.Sleep(1500);
-                    break;
+                }
             }
         }
-
-        Console.WriteLine("Thank you for using the Mindfulness Program!");
     }
 }

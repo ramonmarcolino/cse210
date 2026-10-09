@@ -1,68 +1,69 @@
 using System;
 
-public class ReflectionActivity : Activity
+namespace Mindfulness
 {
-    private string[] _prompts =
+    public class ReflectionActivity : Activity
     {
-        "Think of a time when you stood up for someone else.",
-        "Think of a time when you did something really difficult.",
-        "Think of a time when you helped someone in need.",
-        "Think of a time when you did something truly selfless."
-    };
+        private string[] _prompts;
+        private string[] _questions;
+        private Random _random;
 
-    private string[] _questions =
-    {
-        "Why was this experience meaningful to you?",
-        "Have you ever done anything like this before?",
-        "How did you get started?",
-        "How did you feel when it was complete?",
-        "What made this time different from other times?",
-        "What is your favorite thing about this experience?",
-        "What could you learn from this experience?",
-        "What did you learn about yourself?",
-        "How can you keep this experience in mind in the future?"
-    };
-
-    private Random _random = new Random();
-
-    public ReflectionActivity()
-        : base(
-            "Reflection Activity",
-            "This activity will help you reflect on times in your " +
-            "life when you have shown strength and resilience."
-        )
-    {
-    }
-
-    public void Run()
-    {
-        DisplayStartingMessage();
-
-        Console.WriteLine();
-        Console.WriteLine("Consider the following prompt:");
-        Console.WriteLine(
-            $"--- {_prompts[_random.Next(_prompts.Length)]} ---"
-        );
-
-        Console.WriteLine();
-        Console.WriteLine(
-            "When you have something in mind, press Enter to continue."
-        );
-        Console.ReadLine();
-
-        DateTime endTime = DateTime.Now.AddSeconds(GetDuration());
-
-        while (DateTime.Now < endTime)
+        public ReflectionActivity()
+            : base(
+                "Reflection Activity",
+                "This activity will help you reflect on times in your life when you have shown strength and resilience. Consider each prompt carefully.")
         {
-            string question =
-                _questions[_random.Next(_questions.Length)];
+            _prompts = new string[]
+            {
+                "Think of a time when you stood up for someone else.",
+                "Think of a time when you did something difficult.",
+                "Think of a time when you helped someone in need.",
+                "Think of a time when you overcame a challenge.",
+                "Think of a time when you made someone smile."
+            };
 
-            Console.WriteLine();
-            Console.WriteLine(question);
+            _questions = new string[]
+            {
+                "Why was this experience meaningful to you?",
+                "How did you feel when it was over?",
+                "What did you learn about yourself?",
+                "What made this experience special?",
+                "How can you apply what you learned in the future?",
+                "Who helped you during this experience?",
+                "What would you do differently next time?",
+                "How did this experience change your perspective?"
+            };
 
-            ShowSpinner(5);
+            _random = new Random();
         }
 
-        DisplayEndingMessage();
+        protected override void PerformActivity()
+        {
+            Console.WriteLine(
+                "Consider the following prompt:");
+
+            Console.WriteLine();
+            Console.WriteLine(
+                $"--- {_prompts[_random.Next(_prompts.Length)]} ---");
+
+            Console.WriteLine();
+            Console.WriteLine(
+                "When you have something in mind, press Enter to continue.");
+
+            Console.ReadLine();
+
+            DateTime endTime = DateTime.UtcNow.AddSeconds(Duration);
+
+            while (DateTime.UtcNow < endTime)
+            {
+                string question =
+                    _questions[_random.Next(_questions.Length)];
+
+                Console.WriteLine();
+                Console.WriteLine($"> {question}");
+
+                ShowSpinner(5);
+            }
+        }
     }
 }

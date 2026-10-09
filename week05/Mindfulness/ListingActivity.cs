@@ -1,63 +1,62 @@
 using System;
 using System.Collections.Generic;
 
-public class ListingActivity : Activity
+namespace Mindfulness
 {
-    private string[] _prompts =
+    public class ListingActivity : Activity
     {
-        "Who are people that you appreciate?",
-        "What are personal strengths of yours?",
-        "Who are people that you have helped this week?",
-        "Who are some of your personal heroes?",
-        "What are some things you are grateful for?"
-    };
+        private string[] _prompts;
 
-    private List<string> _items = new List<string>();
-    private Random _random = new Random();
-
-    public ListingActivity()
-        : base(
-            "Listing Activity",
-            "This activity will help you reflect on the good things " +
-            "in your life by having you list as many things as you can."
-        )
-    {
-    }
-
-    public void Run()
-    {
-        DisplayStartingMessage();
-
-        _items.Clear();
-
-        string prompt = _prompts[_random.Next(_prompts.Length)];
-
-        Console.WriteLine();
-        Console.WriteLine($"List as many responses as you can to:");
-        Console.WriteLine($"--- {prompt} ---");
-
-        ShowCountDown(5);
-
-        DateTime endTime = DateTime.Now.AddSeconds(GetDuration());
-
-        while (DateTime.Now < endTime)
+        public ListingActivity()
+            : base(
+                "Listing Activity",
+                "This activity will help you reflect on the good things in your life by having you list as many things as you can in a certain area.")
         {
-            Console.WriteLine();
-            Console.Write("Enter an item (or press Enter to finish): ");
-
-            string item = Console.ReadLine() ?? "";
-
-            if (string.IsNullOrWhiteSpace(item))
+            _prompts = new string[]
             {
-                break;
-            }
-
-            _items.Add(item.Trim());
+                "Who are people that you appreciate?",
+                "What are personal strengths you have?",
+                "Who have you helped this week?",
+                "When have you felt the Holy Ghost this month?",
+                "What are things you are grateful for?",
+                "What are things that make you happy?"
+            };
         }
 
-        Console.WriteLine();
-        Console.WriteLine($"You listed {_items.Count} items.");
+        protected override void PerformActivity()
+        {
+            Random random = new Random();
 
-        DisplayEndingMessage();
+            string prompt = _prompts[random.Next(_prompts.Length)];
+
+            Console.WriteLine("List as many responses as you can to the following prompt:");
+            Console.WriteLine();
+            Console.WriteLine($"--- {prompt} ---");
+            Console.WriteLine();
+            Console.Write("You may begin in: ");
+
+            ShowCountDown(5);
+            Console.WriteLine();
+            Console.WriteLine();
+
+            List<string> responses = new List<string>();
+            DateTime endTime = DateTime.UtcNow.AddSeconds(Duration);
+
+            while (DateTime.UtcNow < endTime)
+            {
+                Console.Write("> ");
+
+                string response = Console.ReadLine() ?? "";
+
+                if (DateTime.UtcNow <= endTime &&
+                    !string.IsNullOrWhiteSpace(response))
+                {
+                    responses.Add(response.Trim());
+                }
+            }
+
+            Console.WriteLine();
+            Console.WriteLine($"You listed {responses.Count} item(s)!");
+        }
     }
 }
